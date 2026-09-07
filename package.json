@@ -1,0 +1,41 @@
+{
+  "name": "omp-processes",
+  "version": "1.0.0",
+  "description": "Live process monitor for omp: Ctrl+P or /processes opens a fullscreen view of every background process agents started, with streaming output and stdin",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "pi-extension",
+    "omp",
+    "processes",
+    "daemon",
+    "logs"
+  ],
+  "files": [
+    "extensions",
+    "src",
+    "README.md"
+  ],
+  "omp": {
+    "extensions": [
+      "./extensions/processes.ts"
+    ]
+  },
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "@oh-my-pi/pi-coding-agent": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@oh-my-pi/pi-coding-agent": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@oh-my-pi/pi-coding-agent": "18.0.11",
+    "@oh-my-pi/pi-tui": "18.0.11",
+    "@types/bun": "^1.4.1",
+    "typescript": "^5.9.2"
+  }
+}
