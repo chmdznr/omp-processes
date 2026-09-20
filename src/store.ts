@@ -96,8 +96,10 @@ export class ProcessStore {
 	}
 
 	/**
-	 * Current roster. `all` widens from this session's project to every broker
-	 * scope on the machine (other projects plus global services).
+	 * omp 18.2.6's embedded `cli/ps-data` module stopped exporting
+	 * `collapseCommand`/`uptimeCell` (only collection APIs remain), so the
+	 * viewer normalizes locally: inline scripts embed newlines/tabs that must
+	 * become one display line.
 	 */
 	async list(all: boolean): Promise<ProcessRow[]> {
 		const ps = await loadPsData();
@@ -111,7 +113,7 @@ export class ProcessStore {
 					scope: report.scope,
 					scopeLabel: label,
 					snapshot: daemon.snapshot,
-					command: ps.collapseCommand(daemon.command),
+					command: daemon.command ? daemon.command.replaceAll(/\s+/gu, " ").trim() : "",
 					cwd: daemon.cwd,
 					supervised: daemon.supervised,
 				});

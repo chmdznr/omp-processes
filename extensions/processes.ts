@@ -9,6 +9,7 @@
 
 import type { ExtensionAPI, ExtensionContext } from "@oh-my-pi/pi-coding-agent";
 import { matchesKey } from "@oh-my-pi/pi-tui";
+import { formatDuration } from "@oh-my-pi/pi-utils";
 import { type PsData, loadPsData } from "../src/host.ts";
 import { ProcessStore } from "../src/store.ts";
 import { ProcessViewer } from "../src/view.ts";
@@ -43,10 +44,15 @@ export default function processesExtension(pi: ExtensionAPI): void {
 
 		open = true;
 		const store = new ProcessStore(ctx.cwd);
+		// omp 18.2.6's embedded ps-data no longer exports uptimeCell — format
+		// locally (same semantics: terminal states show "-", else elapsed).
+		const TERMINAL = new Set(["exited", "failed"]);
+		const uptime = (snapshot: { state: string; startedAt: number }): string =>
+			TERMINAL.has(snapshot.state) ? "-" : formatDuration(Date.now() - snapshot.startedAt);
 		try {
 			await ctx.ui.custom<void>(
 				(tui, theme, _keybindings, done) =>
-					new ProcessViewer({ tui, theme, store, uptime: ps.uptimeCell, done: () => done(undefined) }),
+					new ProcessViewer({ tui, theme, store, uptime, done: () => done(undefined) }),
 				{
 					overlay: true,
 					overlayOptions: {
